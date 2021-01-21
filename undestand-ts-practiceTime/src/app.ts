@@ -1,18 +1,105 @@
 // Code goes here!
 
+//project state management
+
+class ProjectState{
+    private projects:any[]=[];  //w'ill store array of list of project
+
+    
+
+    private static instance:ProjectState;
+
+ //private constructor to get garantee of single ton
+ private constructor(){
+
+}
+
+static getInstance(){
+    if(this.instance){
+        return this.instance;
+    }
+    else{
+this.instance=new ProjectState();
+return this.instance;
+    }
+}
+
+addListener(listenerFn:Function){
+
+    //we push our listener function 2 our listener array
+
+    this.listeners.push(listenerFn);
+
+
+  
+
+
+}
+
+
+
+//we wnat to add listener method to manage list of listener  at the end is function which called when some thing changes
+
+private listeners:any[]=[];
+
+   
+
+    addProject(title:string,description:string,numOfPeaople:number){  //called when we click add project Button
+
+
+        const newProject={
+            id:Math.random().toString(),
+            title:title,
+            description:description,
+            peaople:numOfPeaople
+        };
+
+        this.projects.push(newProject);
+
+          //we gonna call all listeners when sth changes like here to add new project
+
+    for(const listenerFn of this.listeners){
+
+        //we pass project here and copy this project array with slice take copy of array but not change orginal array
+        listenerFn(this.projects.slice())
+    }
+    }
+}
+
+//then we create global constant that can be used any where
+//const projectState=new ProjectState();  instead of this we create obj with our getInstance static method
+
+const projectState=ProjectState.getInstance();  //this object will be accessed every where in app
+
+
+
 //codes to render project list
 
 class ProjectList{
+
+
 //we lend some properties from projectInput class
 templateElement:HTMLTemplateElement;
     hostElement:HTMLDivElement;
     element:HTMLElement;   //we give typ of this here becouse each el above has type of html element  we not say htmlSectionElmt
 
+
+    assignedProjects:any[];   //project w'll take before we attach to dom
+
+
     constructor(private type: 'active' |'finished'){
 
         this.templateElement =document.getElementById('project-list')! as HTMLTemplateElement; //here we use typecasting to recorganize template type to ts //to get our content in inside the template
         this.hostElement=document.getElementById('app')! as HTMLDivElement  //where content inside our template be rendersed  if<ss> not still display err use as ..
+        
+        //we gonna initialise assignedproject in this construct if not this below we see an error
+        
+        this.assignedProjects=[];
+
+
         //we gonna store imported node in variable
+
+
         const importedNode=document.importNode(this.templateElement.content,true); //to access el we need other property eg elemetnt
         this.element=importedNode.firstElementChild as HTMLElement; //here we use firstElemChild becouse <section> tag is the first el in our template
     //to excute our attach logic we call attach() private method in this constructor
@@ -20,20 +107,56 @@ templateElement:HTMLTemplateElement;
     //to add id property=user-input  to our form to be able take styles of form from app.css 
     this.element.id=`${this.type}-projects`;   //here id will be dynamically because we awant to render different project list finished project & active project
     
+
+
+    //before we attach we call addListerner call whenever changes done
+
+    projectState.addListener((projects:any[])=>{  //projects is like list of our projects
+  
+        this.assignedProjects=projects;
+       this.renderProjects();
+
+        //so now we end to add  project which i get when something changed in my state
+    })
+
 this.attach();
 
 //then we render content after we attach out elements to our dom
 this.renderContent();
 
+
+
     }
 
 
+
+    //we gonna render our project to domm
+
+    private renderProjects(){
+        const listEl= document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
+        
+
+        //we want to render all project items of this assingedproject
+for(const prjItems of this.assignedProjects){
+
+    const listItem=document.createElement('li');
+    listItem.textContent=prjItems.title;
+   
+    listEl.appendChild(listItem);
+    
+}
+
+
+
+    }
     //here we want to render blank spaces or empty elements are in this template
     private renderContent(){
 //here we want to assign dynamically id for our unordered list depending on project type if finished or act
 const listId=`${this.type}-projects-list`;
 //we gonna assign our listid to our UL eement
 this.element.querySelector('ul')!.id=listId;
+
+
 
 //we gonna attach text content to our h2 elemengt
 this.element.querySelector('h2')!.textContent=this.type.toUpperCase()+' PROJECTS'
@@ -237,6 +360,9 @@ private submitHandler(event:Event){
     //we gonna extract our element values in array before we console it
     const [title,description,people]=userInput
     console.log(title,description,people);
+
+    //we gonna call our addProject method found in projectState class
+    projectState.addProject(title,description,people); //now new project shoulkd be created we need to push this informa(new project) to our project list class because that's class which is responsible for outputting some thing to screen
 
     //after submit clear value in our input
     this.clearInput();
