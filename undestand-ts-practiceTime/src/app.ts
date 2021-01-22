@@ -152,7 +152,19 @@ templateElement:HTMLTemplateElement;
 
     projectState.addListener((projects:Project[])=>{  //and here we use our custom type Project instead opf use any[] here  //projects is like list of our projects
   
-        this.assignedProjects=projects;
+
+        //we gonna filter or get project depend on its status
+
+        const relevantProject=projects.filter((prj)=>{
+
+            if(this.type==='active'){   //we check for its type
+                return prj.status===projectStatus.Active;
+            }
+            return prj.status===projectStatus.Finished;
+        })
+
+        //then assign filtrated project to assignedProject
+        this.assignedProjects=relevantProject;
        this.renderProjects();
 
         //so now we end to add  project which i get when something changed in my state
@@ -174,6 +186,8 @@ this.renderContent();
     private renderProjects(){
         const listEl= document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
         
+//to fix probl of rerender project(or list element(li)) again we set empty string to clear all its content  already stored in listEl to clear it
+listEl.innerHTML='';
 
         //we want to render all project items of this assingedproject
 for(const prjItems of this.assignedProjects){
