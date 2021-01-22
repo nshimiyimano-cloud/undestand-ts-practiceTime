@@ -1,9 +1,41 @@
 // Code goes here!
 
+//we gonna add project type  that our classes in our app will use
+//we define enum type here to define our status
+
+enum projectStatus {
+Active,
+Finished
+}
+class Project{
+
+    constructor(public id:string,
+        public title:string,
+        description:string,
+        public people:number,
+        public status:projectStatus      //here we should use literal union type 'active'|'finished' but a good here is to use enum type
+        ) {  
+
+    }
+}
+
+
 //project state management
 
+
+//and we have to fix problem to use any[] on our listeners array as type we create custom type here to replace any[]
+//we want to encode function type with a one word(Listener)
+
+type Listener=(items:Project[])=>void; //w'll equal to function that w'll take items of project as parameter, this void means don't care about type w'll return
+
+
+
 class ProjectState{
-    private projects:any[]=[];  //w'ill store array of list of project
+
+    //we wnat to add listener method to manage list of listener  at the end is function which called when some thing changes
+
+private listeners:Listener[]=[];   //here instead of use any[] we use Listener[] custom type
+    private projects:Project[]=[];  //here instead of any[] we use our project type contains all properties project w'll need
 
     
 
@@ -24,7 +56,7 @@ return this.instance;
     }
 }
 
-addListener(listenerFn:Function){
+addListener(listenerFn:Listener){   //any here instead of use :Function we use our custom type Listener instead of use any[]
 
     //we push our listener function 2 our listener array
 
@@ -38,21 +70,28 @@ addListener(listenerFn:Function){
 
 
 
-//we wnat to add listener method to manage list of listener  at the end is function which called when some thing changes
 
-private listeners:any[]=[];
 
    
 
-    addProject(title:string,description:string,numOfPeaople:number){  //called when we click add project Button
+    addProject(title:string,description:string,numOfPeople:number){  //called when we click add project Button
 
 
-        const newProject={
+        /* const newProject={
             id:Math.random().toString(),
             title:title,
             description:description,
-            peaople:numOfPeaople
-        };
+            people:numOfPeople
+        };        instead of above we use our project type*/
+
+
+        const newProject=new Project(
+            Math.random().toString(),
+            title,
+            description,
+            numOfPeople,
+            projectStatus.Active  //here we wantb that our project its status will be active by default
+        )
 
         this.projects.push(newProject);
 
@@ -84,7 +123,7 @@ templateElement:HTMLTemplateElement;
     element:HTMLElement;   //we give typ of this here becouse each el above has type of html element  we not say htmlSectionElmt
 
 
-    assignedProjects:any[];   //project w'll take before we attach to dom
+    assignedProjects:Project[];   //and here any[] type we replace it with Project[] type
 
 
     constructor(private type: 'active' |'finished'){
@@ -111,7 +150,7 @@ templateElement:HTMLTemplateElement;
 
     //before we attach we call addListerner call whenever changes done
 
-    projectState.addListener((projects:any[])=>{  //projects is like list of our projects
+    projectState.addListener((projects:Project[])=>{  //and here we use our custom type Project instead opf use any[] here  //projects is like list of our projects
   
         this.assignedProjects=projects;
        this.renderProjects();
