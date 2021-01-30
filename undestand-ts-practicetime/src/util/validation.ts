@@ -1,4 +1,3 @@
-namespace App{
 
     //we gonna expand input validation with interface
 
@@ -49,4 +48,3 @@ export function validate(validatableInput: validatable) {
     return isValid;
 }
 
-}

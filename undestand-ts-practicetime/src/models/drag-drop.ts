@@ -1,6 +1,6 @@
-//utilizing interface to implement drag and drop
+//utilizing interface to implement drag and drop in ES6
 
-namespace App{  //you import in file.ts have same lime like this namespace if not that u wil loose this interface
+//here we remove namespace which is pure typescript
     
 //now these interface is available only in this namespace to make it public able accessed outside of this namespace and of this file use export keyword
 
@@ -17,4 +17,4 @@ namespace App{  //you import in file.ts have same lime like this namespace if no
     }
 
 
-}
+

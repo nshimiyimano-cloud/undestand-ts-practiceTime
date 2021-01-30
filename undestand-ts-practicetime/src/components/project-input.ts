@@ -1,19 +1,19 @@
 //because this class will need extends Component we have to import it in this project-item.ts
 
-///<reference path="base-component.ts"  />
-///<reference path="../decorators/autobind.ts"  />
-///<reference path="../util/validation.ts"  />
-///<reference path="../state/project-state.ts"  />
+
+import Cmp from './base-component';   //here becuse component its a defult must be one in file to be known default export allow name convention you can import it in any name of your choice and be imported withot curybrace{}
+import * as Validation from '../util/validation';                                       //import {validatable,validate} from '../util/validation.js';  //here is to import compiled js becouse is importing in ES6
+import {autobind as Autobind} from '../decorators/autobind'; //here we rename autobind to Autobind in capitel letter this is to avoid names to be clashed
+import { projectState } from "../state/project-state";
 
 
-namespace App{
 
 //first of all we gonna make our html code to be rendered
 //we create class to render templete with project-input id and our div id='app'
 
 
 //and here we can inherit our componet
- export class ProjectInput extends Component<HTMLDivElement,HTMLFormElement>{
+ export class ProjectInput extends Cmp<HTMLDivElement,HTMLFormElement>{
 
     /* three element got rid to use them becouse defined in base class tepmate,hostelement &element we rely with those below because its specific */
        titleInputElement: HTMLInputElement;
@@ -68,19 +68,19 @@ renderContent(){} //and here no imlementation
 
         //if we have used class we should use  instantiate with new keyword but now becouse we use interface we do like below
 
-        const titleValidatable: validatable = {
+        const titleValidatable:Validation.validatable = {
             value: enteredDescription,
             required: true
         }
 
-        const descriptionValidatable: validatable = {
+        const descriptionValidatable: Validation.validatable = {
             value: enteredDescription,
             required: true,
             minLength: 5
 
         }
 
-        const peopleValidatable: validatable = {
+        const peopleValidatable: Validation.validatable = {
             value: +enteredPeople,
             required: true,
             min: 1,
@@ -89,9 +89,9 @@ renderContent(){} //and here no imlementation
 
 
         if (
-            !validate(titleValidatable) ||
-            !validate(descriptionValidatable) ||   //! and || means if there is one not valid alert error
-            !validate(peopleValidatable)) {
+            !Validation.validate(titleValidatable) ||
+            !Validation.validate(descriptionValidatable) ||   //! and || means if there is one not valid alert error
+            !Validation.validate(peopleValidatable)) {
             alert('invalid Input!, try Again');
             return;   //here if not |void here we get err becouse void is like undefined means if error found return empty no tuple
         }
@@ -115,7 +115,7 @@ renderContent(){} //and here no imlementation
 
     //here we gonna add priv method that w'll allow us to render our selected content from our template to our dom(contains rendering logic)
 
-    @autobind
+    @Autobind    //here we use renamed name not current name
 
     private submitHandler(event: Event) {
         event.preventDefault();//to not submit empty httprequest
@@ -149,4 +149,3 @@ renderContent(){} //and here no imlementation
     
 }
 
-}

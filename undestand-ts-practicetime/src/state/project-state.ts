@@ -1,5 +1,5 @@
 
-namespace App{
+import {Project,ProjectStatus} from "../models/project";
 
 
 
@@ -135,7 +135,9 @@ if(project && project.status!==newStatus){
 //then we create global constant that can be used any where
 //const projectState=new ProjectState();  instead of this we create obj with our getInstance static method
 
+
+
+console.log("Running......");
  export  const projectState = ProjectState.getInstance();  //this object will be accessed every where in app
 
 
-}

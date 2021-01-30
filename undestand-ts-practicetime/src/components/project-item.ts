@@ -2,16 +2,20 @@
 
 //because this class will need extends Component we have to import it in this project-item.ts
 //this file will need all this modules to avoid runtime error to loose some modules in app.ts
-///<reference path="base-component.ts"  />
-///<reference path="../decorators/autobind.ts"  />
-///<references path="../models/project.ts"  />
-///<reference path="../models/drag-drop.ts"  />s
 
-namespace App{
+//EVERY WHERE WE HAVE REFERENCES ,NAMESPACES WE REMOVE IT TO REPLACE TYPESCRIPT IMPORTS WITH ES6 IMPORT&EXPORT
+
+
+import {Draggable}  from "../models/drag-drop";
+import {Project} from "../models/project";
+import Cmp from "./base-component";   // here we say Cmp instead of write in full like Component even you import with in abbreviatio no problem becouse defoult export imported in what you want
+import {autobind} from '../decorators/autobind';
+
+
 
 //class to render single project item
 
-export class  ProjectItem extends Component<HTMLUListElement,HTMLLIElement>
+export class  ProjectItem extends Cmp<HTMLUListElement,HTMLLIElement>
 implements Draggable{
 
     private project:Project;
@@ -70,4 +74,3 @@ implements Draggable{
     }
 }
 
-}

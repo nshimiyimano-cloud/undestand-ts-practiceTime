@@ -1,9 +1,8 @@
-namespace App{
 
 
 //we gonna add autobind decorator here
 
-export function autobind(_: any, methodName: string, descriptor: PropertyDescriptor) {
+export function autobind(_: any,_2: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
     const adjDescriptor: PropertyDescriptor = {
 
@@ -23,4 +22,3 @@ export function autobind(_: any, methodName: string, descriptor: PropertyDescrip
 }
 
 
-}

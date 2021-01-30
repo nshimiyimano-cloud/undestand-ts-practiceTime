@@ -1,4 +1,4 @@
-namespace App{
+
 
 //as inheritance we want to add general component class as in angulor that will used on our project and is reusable we give all properties our project will need
 
@@ -6,7 +6,7 @@ namespace App{
 //component base class any in this bas class will reused by its derived classes
 //here is on user-inserface(UI leavel)
 //here we add abstract to not this class be directly instantiated if instantiated ts throw error is for inheritance to be used in derived class
-export abstract class Component<T extends HTMLElement, U extends HTMLElement>{   //here we avoid to define specific info becouse all not div or all not formelement just say only is htmlElement
+export default abstract class Component<T extends HTMLElement, U extends HTMLElement>{   //here we avoid to define specific info becouse all not div or all not formelement just say only is htmlElement
     templateElement: HTMLTemplateElement;
     hostElement: T;
     element: U;
@@ -59,5 +59,3 @@ export abstract class Component<T extends HTMLElement, U extends HTMLElement>{  
 
 
 
-
-}
