@@ -14,7 +14,7 @@ type GoogleGeoCodingResponse={
     results:{geometry:{location:{lat:number,lng:number}}}[];
     status:'OK' | 'ZERO_RESULTS';
 };
-
+//declare var google:any;  //if we install google translator called @types/goglemaps' this line not needed
 
 function searchAddressHandler(event:Event){
     event.preventDefault();
@@ -25,9 +25,21 @@ function searchAddressHandler(event:Event){
         if(response.data.status !== 'OK'){
             throw new Error('could not fetch location');
         }
+        const coordinates=response.data.results[0].geometry.location;     //to get(lat,lang)
+        console.log(coordinates);
 
-        const coordinate=response.data.results[0].geometry.location;     //to get(lat,lang)
-        console.log(coordinate)
+        const map = new google.maps.Map(document.getElementById('map') as HTMLDivElement, {  //here google known becouse @type/googlemaps translator if you hover on it you see all
+            center: coordinates,
+            zoom: 8
+          });
+
+
+
+
+          
+ // The marker, positioned at coordinates
+          new google.maps.Marker({
+            position: coordinates,map: map});
         console.log(response);
     }).catch(error=>{
         alert(error.message)
